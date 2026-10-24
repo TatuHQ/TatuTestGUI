@@ -70,7 +70,7 @@ describe("AppShell", () => {
 
     // Top bar: brand, project switcher, user and sign-out.
     expect(screen.getByRole("banner")).toBeInTheDocument();
-    expect(screen.getByText("Tucano Test")).toBeInTheDocument();
+    expect(screen.getByText("TatuTest")).toBeInTheDocument();
     expect(
       screen.getByRole("combobox", { name: "Active project" }),
     ).toBeInTheDocument();

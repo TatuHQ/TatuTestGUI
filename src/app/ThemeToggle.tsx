@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 
 type Theme = "light" | "dark";
 
-const THEME_KEY = "tucano-theme";
+const THEME_KEY = "tatu-theme";
 
 function getInitialTheme(): Theme {
   if (typeof window === "undefined") return "light";

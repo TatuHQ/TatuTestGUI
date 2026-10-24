@@ -14,8 +14,9 @@ import { ServiceService } from './services/ServiceService';
 import { TestCasesService } from './services/TestCasesService';
 import { TestRunsService } from './services/TestRunsService';
 import { TestSuitesService } from './services/TestSuitesService';
+import { WorkflowsService } from './services/WorkflowsService';
 type HttpRequestConstructor = new (config: OpenAPIConfig) => BaseHttpRequest;
-export class TucanoApi {
+export class TatuApi {
   public readonly auth: AuthService;
   public readonly configurations: ConfigurationsService;
   public readonly milestones: MilestonesService;
@@ -25,6 +26,7 @@ export class TucanoApi {
   public readonly testCases: TestCasesService;
   public readonly testRuns: TestRunsService;
   public readonly testSuites: TestSuitesService;
+  public readonly workflows: WorkflowsService;
   public readonly request: BaseHttpRequest;
   constructor(config?: Partial<OpenAPIConfig>, HttpRequest: HttpRequestConstructor = FetchHttpRequest) {
     this.request = new HttpRequest({
@@ -47,6 +49,7 @@ export class TucanoApi {
     this.testCases = new TestCasesService(this.request);
     this.testRuns = new TestRunsService(this.request);
     this.testSuites = new TestSuitesService(this.request);
+    this.workflows = new WorkflowsService(this.request);
   }
 }
 

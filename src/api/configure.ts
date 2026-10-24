@@ -1,4 +1,4 @@
-import { TucanoApi } from "./generated/TucanoApi.js";
+import { TatuApi } from "./generated/TatuApi.js";
 
 /**
  * Reads the bearer token to send. It is called once per request, so a token
@@ -20,7 +20,7 @@ export const API_BASE_URL: string =
 export function createApiClient(options: ApiClientOptions = {}) {
   const { baseUrl = API_BASE_URL, token, headers = {} } = options;
 
-  return new TucanoApi({
+  return new TatuApi({
     BASE: baseUrl,
     HEADERS: { ...headers },
     TOKEN:

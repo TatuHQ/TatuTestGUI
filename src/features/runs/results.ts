@@ -34,7 +34,7 @@ export interface ResultRow {
  * Pairs the run's case snapshot with the results it records, in snapshot order.
  *
  * A result whose case the snapshot does not hold still gets a row: the API
- * accepts one (`TucanoTestAPI#285`), and hiding it would leave the table
+ * accepts one (`TatuTestAPI#285`), and hiding it would leave the table
  * shorter than the count printed above it.
  */
 export function buildResultRows(run: TestRun): ResultRow[] {

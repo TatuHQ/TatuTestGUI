@@ -2,7 +2,7 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-export { TucanoApi } from './TucanoApi';
+export { TatuApi } from './TatuApi';
 
 export { ApiError } from './core/ApiError';
 export { BaseHttpRequest } from './core/BaseHttpRequest';
@@ -75,6 +75,11 @@ export type { TestSuite } from './models/TestSuite';
 export type { TestSuiteUpdateRequest } from './models/TestSuiteUpdateRequest';
 export type { UploadResponse } from './models/UploadResponse';
 export type { version } from './models/version';
+export type { Workflow } from './models/Workflow';
+export type { workflow_id } from './models/workflow_id';
+export type { WorkflowCreateRequest } from './models/WorkflowCreateRequest';
+export type { WorkflowStep } from './models/WorkflowStep';
+export type { WorkflowUpdateRequest } from './models/WorkflowUpdateRequest';
 
 export { AuthService } from './services/AuthService';
 export { ConfigurationsService } from './services/ConfigurationsService';
@@ -85,3 +90,4 @@ export { ServiceService } from './services/ServiceService';
 export { TestCasesService } from './services/TestCasesService';
 export { TestRunsService } from './services/TestRunsService';
 export { TestSuitesService } from './services/TestSuitesService';
+export { WorkflowsService } from './services/WorkflowsService';

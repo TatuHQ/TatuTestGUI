@@ -1,10 +1,10 @@
 {
-  "repository": "TucanoTechnology/TucanoTestAPI",
+  "repository": "TatuHQ/TatuTestAPI",
   "path": "openapi.json",
-  "ref": "a9c456818d0de05d27f231e457e694920fa01b17",
-  "sha256": "8657c23fa136fe184050963bcbdccf46b7a7a84e64d65150f2ea29e3055f1407",
+  "ref": "a1db2d36ff33c11db5a4f9a14ebbcfcdfc413eee",
+  "sha256": "1f090ffb5c053ae88fd17272a2deb28380a6b74b39dde24482aa6067c70ee27f",
   "openapi": "3.0.3",
-  "operationCount": 92,
+  "operationCount": 108,
   "generator": {
     "name": "openapi-typescript-codegen",
     "version": "0.31.0"
