@@ -2,13 +2,12 @@
 
 Accessible web interface for [TatuTestAPI](https://github.com/TatuHQ/TatuTestAPI).
 
-## Renamed from TucanoTestGUI (0.2.0)
+## Deployment identifiers (0.2.0)
 
-The GUI is now **TatuTestGUI**, published by [TatuHQ](https://github.com/TatuHQ). The rename is
-a clean break: the nginx proxy variable `TUCANO_API_URL` is now `TATU_API_URL`, the package is
-`tatu-test-gui`, the generated client is `TatuApi`, and the image is
-`ghcr.io/tatuhq/tatutestgui` (or `tatu-test-gui:local` from Compose). Update the proxy variable
-and rebuild the container; no stored data is involved.
+0.2.0 is a clean-break deployment release: the nginx proxy variable is `TATU_API_URL`, the package
+is `tatu-test-gui`, the generated client is `TatuApi`, and the image is
+`ghcr.io/tatuhq/tatutestgui` (or `tatu-test-gui:local` from Compose). Update the proxy variable and
+rebuild the container; no stored data is involved.
 
 ## Architecture
 
