@@ -63,7 +63,12 @@ jobs:
         run: npm run build
       - name: Browser accessibility and keyboard suite
         run: |
+          # The three runners share one host, so fixed 4173/4174 ports collide
+          # between concurrent E2E jobs. Give every run its own pair.
+          export E2E_PORT=$((20000 + GITHUB_RUN_ID % 20000))
+          export E2E_API_PORT=$((E2E_PORT + 1))
           docker run --rm --network host \
+            -e E2E_PORT -e E2E_API_PORT \
             -v "$GITHUB_WORKSPACE:/w" -w /w \
             mcr.microsoft.com/playwright:v1.63.0-noble \
             npx playwright test

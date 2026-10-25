@@ -9,16 +9,23 @@ import { defineConfig, devices } from "@playwright/test";
  * showed was missing. The build is part of the webServer command so a stale
  * dist can never be what CI green-lights.
  */
+const port = Number(process.env.E2E_PORT ?? 4173);
+const apiPort = Number(process.env.E2E_API_PORT ?? 4174);
+
 export default defineConfig({
   testDir: "./e2e",
   fullyParallel: true,
   forbidOnly: Boolean(process.env.CI),
   retries: process.env.CI ? 1 : 0,
+  // The shared runner host is busy; a 5s visibility window is too tight for
+  // the login/bootstrap round trip when several jobs run at once.
+  timeout: process.env.CI ? 60_000 : 30_000,
+  expect: { timeout: process.env.CI ? 15_000 : 5_000 },
   reporter: process.env.CI
     ? [["github"], ["html", { open: "never" }]]
     : [["list"]],
   use: {
-    baseURL: "http://localhost:4173",
+    baseURL: `http://localhost:${port}`,
     trace: "retain-on-failure",
     // A failure must be debuggable without a re-run (AgentRules/test/ui.md).
     screenshot: "only-on-failure",
@@ -28,7 +35,7 @@ export default defineConfig({
   webServer: [
     {
       command: "node scripts/e2e-api.mjs",
-      port: 4174,
+      port: apiPort,
       reuseExistingServer: !process.env.CI,
     },
     {
@@ -36,7 +43,7 @@ export default defineConfig({
       // only, so the Playwright container in CI never touches the host's
       // native build toolchain.
       command: "node scripts/e2e-static.mjs",
-      port: 4173,
+      port,
       reuseExistingServer: !process.env.CI,
       timeout: 60_000,
     },
