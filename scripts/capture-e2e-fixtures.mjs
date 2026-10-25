@@ -4,15 +4,15 @@
 // last-results report, run/milestone/configuration documents and progress,
 // a seeded case's history, and the reports in both scopes.
 //
-//   TUCANO_E2E_BASE=http://localhost:3100 \
-//   TUCANO_E2E_USER=admin TUCANO_E2E_PASSWORD=... \
+//   TATU_E2E_BASE=http://localhost:3100 \
+//   TATU_E2E_USER=admin TATU_E2E_PASSWORD=... \
 //   node scripts/capture-e2e-fixtures.mjs
 
 import { writeFileSync } from "node:fs";
 
-const BASE = process.env.TUCANO_E2E_BASE ?? "http://localhost:3100";
-const USER = process.env.TUCANO_E2E_USER ?? "admin";
-const PASSWORD = process.env.TUCANO_E2E_PASSWORD ?? "demo-admin-password";
+const BASE = process.env.TATU_E2E_BASE ?? "http://localhost:3100";
+const USER = process.env.TATU_E2E_USER ?? "admin";
+const PASSWORD = process.env.TATU_E2E_PASSWORD ?? "demo-admin-password";
 
 const session = await (
   await fetch(`${BASE}/auth/login`, {

@@ -94,7 +94,7 @@ export function CaseList({
   const [rows, setRows] = useState<CaseRow[]>([]);
   const [projectName, setProjectName] = useState(projectId);
   // The latest recorded result per case, read once with the project document
-  // (GET /reports/last-results, TucanoTestAPI#457). Null while loading; a
+  // (GET /reports/last-results, TatuTestAPI#457). Null while loading; a
   // failed read leaves the column on its fallback rather than lying about
   // every case as untested.
   const [lastResults, setLastResults] = useState<Map<string, LastCaseResult> | null>(

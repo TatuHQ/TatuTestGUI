@@ -1,10 +1,10 @@
-// Refreshes the vendored `api/openapi.json` from the upstream TucanoTestAPI
+// Refreshes the vendored `api/openapi.json` from the upstream TatuTestAPI
 // repository and rewrites `api/contract.lock.json` to pin the new revision.
 //
 //   npm run sync:openapi                 # re-reads the pinned ref
 //   npm run sync:openapi -- --ref <sha>  # moves the pin forward
 //
-// Requires the GitHub CLI to be authenticated with read access to TucanoTestAPI.
+// Requires the GitHub CLI to be authenticated with read access to TatuTestAPI.
 
 import { execFileSync } from 'node:child_process';
 import { writeFileSync } from 'node:fs';

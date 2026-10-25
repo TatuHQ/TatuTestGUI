@@ -10,7 +10,7 @@ beforeEach(() => {
 describe("App", () => {
   it("renders the login screen when not authenticated", () => {
     render(<App />);
-    expect(screen.getByRole("heading", { name: "Tucano Test" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "TatuTest" })).toBeInTheDocument();
     expect(screen.getByLabelText("Username")).toBeInTheDocument();
     expect(screen.getByLabelText("Password")).toBeInTheDocument();
   });

@@ -1,7 +1,7 @@
 import type { MessageResponse, TestCaseResult } from "../api/generated/index.js";
 
 /**
- * The stored-document echo the write routes carry (TucanoTestAPI#459).
+ * The stored-document echo the write routes carry (TatuTestAPI#459).
  *
  * A document `PUT` answers `{message, document}` and a result record answers
  * `{message, result}`. When either is present the caller paints it straight

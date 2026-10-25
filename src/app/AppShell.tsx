@@ -253,7 +253,7 @@ function AppShellContent() {
         >
           <MenuIcon />
         </button>
-        <span className="topbar__brand">Tucano Test</span>
+        <span className="topbar__brand">TatuTest</span>
         <ProjectSwitcher />
         <GlobalSearch
           onPick={(hit) => {

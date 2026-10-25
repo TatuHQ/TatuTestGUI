@@ -3,12 +3,15 @@
 /* tslint:disable */
 /* eslint-disable */
 import type { AttachmentUpload } from '../models/AttachmentUpload';
+import type { CaseHistoryEntry } from '../models/CaseHistoryEntry';
 import type { CompositionRequest } from '../models/CompositionRequest';
 import type { CompositionResponse } from '../models/CompositionResponse';
 import type { CreateResponse } from '../models/CreateResponse';
 import type { DuplicateRequest } from '../models/DuplicateRequest';
 import type { MessageResponse } from '../models/MessageResponse';
 import type { StepAttachment } from '../models/StepAttachment';
+import type { TestCase } from '../models/TestCase';
+import type { TestCaseUpdateRequest } from '../models/TestCaseUpdateRequest';
 import type { TestSuite } from '../models/TestSuite';
 import type { TestSuiteUpdateRequest } from '../models/TestSuiteUpdateRequest';
 import type { UploadResponse } from '../models/UploadResponse';
@@ -46,8 +49,8 @@ export class TestSuitesService {
         403: `\`forbidden\`: the caller is authenticated but does not hold the role this operation needs on every project it reaches through. A caller that can reach nothing the operation touches is answered the same way, so the two are not distinguished. The projects a request reaches are resolved and checked before the resource itself is loaded, so this answer can precede the \`404\` a missing resource would draw; a deployment that does not enforce authentication skips the check and answers the ordinary \`404\` instead.`,
         404: `Structured error envelope: \`{"error": {"code": ..., "message": ...}}\``,
         409: `Structured error envelope: \`{"error": {"code": ..., "message": ...}}\``,
-        503: `\`service_unavailable\`: the request arrived while \`TUCANO_MAX_CONCURRENCY\` (default 128; an explicit \`0\` removes the cap) others were already in flight. The server refuses rather than queues, and the answer carries \`Retry-After\`.`,
-        504: `\`request_timeout\`: the request outlived \`TUCANO_REQUEST_TIMEOUT_MS\` (default 300000 ms; an explicit \`0\` disables the deadline) and the server stopped waiting for it. A write already handed to the storage layer finishes atomically regardless of the cutoff, so a \`504\` answers 'unknown', never 'half done'.`,
+        503: `\`service_unavailable\`: the request arrived while \`TATU_MAX_CONCURRENCY\` (default 128; an explicit \`0\` removes the cap) others were already in flight. The server refuses rather than queues, and the answer carries \`Retry-After\`.`,
+        504: `\`request_timeout\`: the request outlived \`TATU_REQUEST_TIMEOUT_MS\` (default 300000 ms; an explicit \`0\` disables the deadline) and the server stopped waiting for it. A write already handed to the storage layer finishes atomically regardless of the cutoff, so a \`504\` answers 'unknown', never 'half done'.`,
       },
     });
   }
@@ -86,9 +89,9 @@ export class TestSuitesService {
         404: `Structured error envelope: \`{"error": {"code": ..., "message": ...}}\``,
         409: `Structured error envelope: \`{"error": {"code": ..., "message": ...}}\``,
         412: `The \`If-Match\` digest no longer describes the stored document: it was modified between the read and this update. The response carries the CURRENT digest in \`ETag\` — re-read, re-apply, retry with the new value. The published code is \`conflict\`; the status is \`412\`, distinguishing the precondition failure from a create-time \`409\` clash.`,
-        413: `Every request is capped at \`TUCANO_MAX_BODY_BYTES\` (default 50 MiB) by the router, before the handler runs: the answer is plain text — \`length limit exceeded\` — never the error envelope. Because the router cap and the attachment cap are the same size, the \`payload_too_large\` envelope the API can still produce is unreachable for attachments, and this plain-text 413 is the only observable one.`,
-        503: `\`service_unavailable\`: the request arrived while \`TUCANO_MAX_CONCURRENCY\` (default 128; an explicit \`0\` removes the cap) others were already in flight. The server refuses rather than queues, and the answer carries \`Retry-After\`.`,
-        504: `\`request_timeout\`: the request outlived \`TUCANO_REQUEST_TIMEOUT_MS\` (default 300000 ms; an explicit \`0\` disables the deadline) and the server stopped waiting for it. A write already handed to the storage layer finishes atomically regardless of the cutoff, so a \`504\` answers 'unknown', never 'half done'.`,
+        413: `Every request is capped at \`TATU_MAX_BODY_BYTES\` (default 50 MiB) by the router, before the handler runs: the answer is plain text — \`length limit exceeded\` — never the error envelope. Because the router cap and the attachment cap are the same size, the \`payload_too_large\` envelope the API can still produce is unreachable for attachments, and this plain-text 413 is the only observable one.`,
+        503: `\`service_unavailable\`: the request arrived while \`TATU_MAX_CONCURRENCY\` (default 128; an explicit \`0\` removes the cap) others were already in flight. The server refuses rather than queues, and the answer carries \`Retry-After\`.`,
+        504: `\`request_timeout\`: the request outlived \`TATU_REQUEST_TIMEOUT_MS\` (default 300000 ms; an explicit \`0\` disables the deadline) and the server stopped waiting for it. A write already handed to the storage layer finishes atomically regardless of the cutoff, so a \`504\` answers 'unknown', never 'half done'.`,
       },
     });
   }
@@ -114,8 +117,8 @@ export class TestSuitesService {
         403: `\`forbidden\`: the caller is authenticated but does not hold the role this operation needs on every project it reaches through. A caller that can reach nothing the operation touches is answered the same way, so the two are not distinguished. The projects a request reaches are resolved and checked before the resource itself is loaded, so this answer can precede the \`404\` a missing resource would draw; a deployment that does not enforce authentication skips the check and answers the ordinary \`404\` instead.`,
         404: `Structured error envelope: \`{"error": {"code": ..., "message": ...}}\``,
         409: `Structured error envelope: \`{"error": {"code": ..., "message": ...}}\``,
-        503: `\`service_unavailable\`: the request arrived while \`TUCANO_MAX_CONCURRENCY\` (default 128; an explicit \`0\` removes the cap) others were already in flight. The server refuses rather than queues, and the answer carries \`Retry-After\`.`,
-        504: `\`request_timeout\`: the request outlived \`TUCANO_REQUEST_TIMEOUT_MS\` (default 300000 ms; an explicit \`0\` disables the deadline) and the server stopped waiting for it. A write already handed to the storage layer finishes atomically regardless of the cutoff, so a \`504\` answers 'unknown', never 'half done'.`,
+        503: `\`service_unavailable\`: the request arrived while \`TATU_MAX_CONCURRENCY\` (default 128; an explicit \`0\` removes the cap) others were already in flight. The server refuses rather than queues, and the answer carries \`Retry-After\`.`,
+        504: `\`request_timeout\`: the request outlived \`TATU_REQUEST_TIMEOUT_MS\` (default 300000 ms; an explicit \`0\` disables the deadline) and the server stopped waiting for it. A write already handed to the storage layer finishes atomically regardless of the cutoff, so a \`504\` answers 'unknown', never 'half done'.`,
       },
     });
   }
@@ -146,9 +149,9 @@ export class TestSuitesService {
         403: `\`forbidden\`: the caller is authenticated but does not hold the role this operation needs on every project it reaches through. A caller that can reach nothing the operation touches is answered the same way, so the two are not distinguished. The projects a request reaches are resolved and checked before the resource itself is loaded, so this answer can precede the \`404\` a missing resource would draw; a deployment that does not enforce authentication skips the check and answers the ordinary \`404\` instead.`,
         404: `Structured error envelope: \`{"error": {"code": ..., "message": ...}}\``,
         409: `Structured error envelope: \`{"error": {"code": ..., "message": ...}}\``,
-        413: `Every request is capped at \`TUCANO_MAX_BODY_BYTES\` (default 50 MiB) by the router, before the handler runs: the answer is plain text — \`length limit exceeded\` — never the error envelope. Because the router cap and the attachment cap are the same size, the \`payload_too_large\` envelope the API can still produce is unreachable for attachments, and this plain-text 413 is the only observable one.`,
-        503: `\`service_unavailable\`: the request arrived while \`TUCANO_MAX_CONCURRENCY\` (default 128; an explicit \`0\` removes the cap) others were already in flight. The server refuses rather than queues, and the answer carries \`Retry-After\`.`,
-        504: `\`request_timeout\`: the request outlived \`TUCANO_REQUEST_TIMEOUT_MS\` (default 300000 ms; an explicit \`0\` disables the deadline) and the server stopped waiting for it. A write already handed to the storage layer finishes atomically regardless of the cutoff, so a \`504\` answers 'unknown', never 'half done'.`,
+        413: `Every request is capped at \`TATU_MAX_BODY_BYTES\` (default 50 MiB) by the router, before the handler runs: the answer is plain text — \`length limit exceeded\` — never the error envelope. Because the router cap and the attachment cap are the same size, the \`payload_too_large\` envelope the API can still produce is unreachable for attachments, and this plain-text 413 is the only observable one.`,
+        503: `\`service_unavailable\`: the request arrived while \`TATU_MAX_CONCURRENCY\` (default 128; an explicit \`0\` removes the cap) others were already in flight. The server refuses rather than queues, and the answer carries \`Retry-After\`.`,
+        504: `\`request_timeout\`: the request outlived \`TATU_REQUEST_TIMEOUT_MS\` (default 300000 ms; an explicit \`0\` disables the deadline) and the server stopped waiting for it. A write already handed to the storage layer finishes atomically regardless of the cutoff, so a \`504\` answers 'unknown', never 'half done'.`,
       },
     });
   }
@@ -174,8 +177,8 @@ export class TestSuitesService {
         403: `\`forbidden\`: the caller is authenticated but does not hold the role this operation needs on every project it reaches through. A caller that can reach nothing the operation touches is answered the same way, so the two are not distinguished. The projects a request reaches are resolved and checked before the resource itself is loaded, so this answer can precede the \`404\` a missing resource would draw; a deployment that does not enforce authentication skips the check and answers the ordinary \`404\` instead.`,
         404: `Structured error envelope: \`{"error": {"code": ..., "message": ...}}\``,
         409: `Structured error envelope: \`{"error": {"code": ..., "message": ...}}\``,
-        503: `\`service_unavailable\`: the request arrived while \`TUCANO_MAX_CONCURRENCY\` (default 128; an explicit \`0\` removes the cap) others were already in flight. The server refuses rather than queues, and the answer carries \`Retry-After\`.`,
-        504: `\`request_timeout\`: the request outlived \`TUCANO_REQUEST_TIMEOUT_MS\` (default 300000 ms; an explicit \`0\` disables the deadline) and the server stopped waiting for it. A write already handed to the storage layer finishes atomically regardless of the cutoff, so a \`504\` answers 'unknown', never 'half done'.`,
+        503: `\`service_unavailable\`: the request arrived while \`TATU_MAX_CONCURRENCY\` (default 128; an explicit \`0\` removes the cap) others were already in flight. The server refuses rather than queues, and the answer carries \`Retry-After\`.`,
+        504: `\`request_timeout\`: the request outlived \`TATU_REQUEST_TIMEOUT_MS\` (default 300000 ms; an explicit \`0\` disables the deadline) and the server stopped waiting for it. A write already handed to the storage layer finishes atomically regardless of the cutoff, so a \`504\` answers 'unknown', never 'half done'.`,
       },
     });
   }
@@ -206,9 +209,54 @@ export class TestSuitesService {
         403: `\`forbidden\`: the caller is authenticated but does not hold the role this operation needs on every project it reaches through. A caller that can reach nothing the operation touches is answered the same way, so the two are not distinguished. The projects a request reaches are resolved and checked before the resource itself is loaded, so this answer can precede the \`404\` a missing resource would draw; a deployment that does not enforce authentication skips the check and answers the ordinary \`404\` instead.`,
         404: `Structured error envelope: \`{"error": {"code": ..., "message": ...}}\``,
         409: `Structured error envelope: \`{"error": {"code": ..., "message": ...}}\``,
-        413: `Every request is capped at \`TUCANO_MAX_BODY_BYTES\` (default 50 MiB) by the router, before the handler runs: the answer is plain text — \`length limit exceeded\` — never the error envelope. Because the router cap and the attachment cap are the same size, the \`payload_too_large\` envelope the API can still produce is unreachable for attachments, and this plain-text 413 is the only observable one.`,
-        503: `\`service_unavailable\`: the request arrived while \`TUCANO_MAX_CONCURRENCY\` (default 128; an explicit \`0\` removes the cap) others were already in flight. The server refuses rather than queues, and the answer carries \`Retry-After\`.`,
-        504: `\`request_timeout\`: the request outlived \`TUCANO_REQUEST_TIMEOUT_MS\` (default 300000 ms; an explicit \`0\` disables the deadline) and the server stopped waiting for it. A write already handed to the storage layer finishes atomically regardless of the cutoff, so a \`504\` answers 'unknown', never 'half done'.`,
+        413: `Every request is capped at \`TATU_MAX_BODY_BYTES\` (default 50 MiB) by the router, before the handler runs: the answer is plain text — \`length limit exceeded\` — never the error envelope. Because the router cap and the attachment cap are the same size, the \`payload_too_large\` envelope the API can still produce is unreachable for attachments, and this plain-text 413 is the only observable one.`,
+        503: `\`service_unavailable\`: the request arrived while \`TATU_MAX_CONCURRENCY\` (default 128; an explicit \`0\` removes the cap) others were already in flight. The server refuses rather than queues, and the answer carries \`Retry-After\`.`,
+        504: `\`request_timeout\`: the request outlived \`TATU_REQUEST_TIMEOUT_MS\` (default 300000 ms; an explicit \`0\` disables the deadline) and the server stopped waiting for it. A write already handed to the storage layer finishes atomically regardless of the cutoff, so a \`504\` answers 'unknown', never 'half done'.`,
+      },
+    });
+  }
+  /**
+   * Update a test case in a suite
+   * Addresses the copy the named in a suite holds: an identifier two parents hold is edited through this door without a conflict, and a in a suite that does not hold the case is a `404`, never a silent redirect to the holder. suite A change to `title`, `steps`, `preconditions` or `expectedResult` records an immutable `revisions/v{version}.json` snapshot of the previous document and starts a new version; any other update leaves `version` and `lastModified` untouched, which are always API-managed. The body rules are the global route's, including the refusal of `defectLinks` (#460); the parent component is validated (`invalid_id`) and `case_id` is addressed verbatim (`404`).
+   * @returns MessageResponse Updated. `document` carries the case as stored in this parent — including the `version` and `lastModified` a qualifying update advances (#459).
+   * @throws ApiError
+   */
+  public updateTestSuiteCase({
+    id,
+    caseId,
+    requestBody,
+    ifMatch,
+  }: {
+    id: string,
+    caseId: string,
+    requestBody: TestCaseUpdateRequest,
+    /**
+     * Optional optimistic-concurrency precondition: the `ETag` value last read for this document. A `PUT` carrying it is applied only if the stored document still digests to it; otherwise the request is refused `412` — code `conflict` — carrying the CURRENT digest, so the client can re-read in one round trip. Absent or empty, the update follows the legacy last-writer-wins path.
+     */
+    ifMatch?: string,
+  }): CancelablePromise<MessageResponse> {
+    return this.httpRequest.request({
+      method: 'PUT',
+      url: '/test_suites/{id}/test_cases/{case_id}',
+      path: {
+        'id': id,
+        'case_id': caseId,
+      },
+      headers: {
+        'If-Match': ifMatch,
+      },
+      body: requestBody,
+      mediaType: 'application/json',
+      errors: {
+        400: `\`invalid_request\`: the body was rejected — an unknown or missing field, a field whose type does not match the schema, a \`projectId\` on \`POST /projects\` that is not a single path segment ending in \`.json\`, or a name-only payload that omits what creation needs; or a \`name\` that would need more than the 255 bytes one stored name may hold, refused here rather than failing as a storage error when the project is written.`,
+        401: `\`missing_token\`, \`invalid_token\` or \`token_expired\`: the \`Authorization\` header was absent or carried a token this deployment does not accept. The response carries the \`WWW-Authenticate\` challenge.`,
+        403: `\`forbidden\`: the caller is authenticated but does not hold the role this operation needs on every project it reaches through. A caller that can reach nothing the operation touches is answered the same way, so the two are not distinguished. The projects a request reaches are resolved and checked before the resource itself is loaded, so this answer can precede the \`404\` a missing resource would draw; a deployment that does not enforce authentication skips the check and answers the ordinary \`404\` instead.`,
+        404: `Structured error envelope: \`{"error": {"code": ..., "message": ...}}\``,
+        409: `Structured error envelope: \`{"error": {"code": ..., "message": ...}}\``,
+        412: `The \`If-Match\` digest no longer describes the stored document: it was modified between the read and this update. The response carries the CURRENT digest in \`ETag\` — re-read, re-apply, retry with the new value. The published code is \`conflict\`; the status is \`412\`, distinguishing the precondition failure from a create-time \`409\` clash.`,
+        413: `Every request is capped at \`TATU_MAX_BODY_BYTES\` (default 50 MiB) by the router, before the handler runs: the answer is plain text — \`length limit exceeded\` — never the error envelope. Because the router cap and the attachment cap are the same size, the \`payload_too_large\` envelope the API can still produce is unreachable for attachments, and this plain-text 413 is the only observable one.`,
+        503: `\`service_unavailable\`: the request arrived while \`TATU_MAX_CONCURRENCY\` (default 128; an explicit \`0\` removes the cap) others were already in flight. The server refuses rather than queues, and the answer carries \`Retry-After\`.`,
+        504: `\`request_timeout\`: the request outlived \`TATU_REQUEST_TIMEOUT_MS\` (default 300000 ms; an explicit \`0\` disables the deadline) and the server stopped waiting for it. A write already handed to the storage layer finishes atomically regardless of the cutoff, so a \`504\` answers 'unknown', never 'half done'.`,
       },
     });
   }
@@ -237,8 +285,74 @@ export class TestSuitesService {
         403: `\`forbidden\`: the caller is authenticated but does not hold the role this operation needs on every project it reaches through. A caller that can reach nothing the operation touches is answered the same way, so the two are not distinguished. The projects a request reaches are resolved and checked before the resource itself is loaded, so this answer can precede the \`404\` a missing resource would draw; a deployment that does not enforce authentication skips the check and answers the ordinary \`404\` instead.`,
         404: `Structured error envelope: \`{"error": {"code": ..., "message": ...}}\``,
         409: `Structured error envelope: \`{"error": {"code": ..., "message": ...}}\``,
-        503: `\`service_unavailable\`: the request arrived while \`TUCANO_MAX_CONCURRENCY\` (default 128; an explicit \`0\` removes the cap) others were already in flight. The server refuses rather than queues, and the answer carries \`Retry-After\`.`,
-        504: `\`request_timeout\`: the request outlived \`TUCANO_REQUEST_TIMEOUT_MS\` (default 300000 ms; an explicit \`0\` disables the deadline) and the server stopped waiting for it. A write already handed to the storage layer finishes atomically regardless of the cutoff, so a \`504\` answers 'unknown', never 'half done'.`,
+        503: `\`service_unavailable\`: the request arrived while \`TATU_MAX_CONCURRENCY\` (default 128; an explicit \`0\` removes the cap) others were already in flight. The server refuses rather than queues, and the answer carries \`Retry-After\`.`,
+        504: `\`request_timeout\`: the request outlived \`TATU_REQUEST_TIMEOUT_MS\` (default 300000 ms; an explicit \`0\` disables the deadline) and the server stopped waiting for it. A write already handed to the storage layer finishes atomically regardless of the cutoff, so a \`504\` answers 'unknown', never 'half done'.`,
+      },
+    });
+  }
+  /**
+   * List the revisions of a test case in a suite
+   * The recorded snapshots of the copy the named in a suite holds, oldest first; the live version is not listed. The conflict a duplicated bare identifier answers on the global route is exactly what this door resolves — each holder lists its own history. A in a suite that does not hold the case is a `404`.
+   * @returns CaseHistoryEntry Revision history
+   * @throws ApiError
+   */
+  public listTestSuiteCaseHistory({
+    id,
+    caseId,
+  }: {
+    id: string,
+    caseId: string,
+  }): CancelablePromise<Array<CaseHistoryEntry>> {
+    return this.httpRequest.request({
+      method: 'GET',
+      url: '/test_suites/{id}/test_cases/{case_id}/history',
+      path: {
+        'id': id,
+        'case_id': caseId,
+      },
+      errors: {
+        400: `\`invalid_id\`: an identifier must be a single path component ending in \`.json\` and no longer than the 255 bytes one stored component may hold. Test cases are addressed verbatim and answer \`404\` instead, and the duplicate routes differ as their own descriptions record.`,
+        401: `\`missing_token\`, \`invalid_token\` or \`token_expired\`: the \`Authorization\` header was absent or carried a token this deployment does not accept. The response carries the \`WWW-Authenticate\` challenge.`,
+        403: `\`forbidden\`: the caller is authenticated but does not hold the role this operation needs on every project it reaches through. A caller that can reach nothing the operation touches is answered the same way, so the two are not distinguished. The projects a request reaches are resolved and checked before the resource itself is loaded, so this answer can precede the \`404\` a missing resource would draw; a deployment that does not enforce authentication skips the check and answers the ordinary \`404\` instead.`,
+        404: `Structured error envelope: \`{"error": {"code": ..., "message": ...}}\``,
+        503: `\`service_unavailable\`: the request arrived while \`TATU_MAX_CONCURRENCY\` (default 128; an explicit \`0\` removes the cap) others were already in flight. The server refuses rather than queues, and the answer carries \`Retry-After\`.`,
+        504: `\`request_timeout\`: the request outlived \`TATU_REQUEST_TIMEOUT_MS\` (default 300000 ms; an explicit \`0\` disables the deadline) and the server stopped waiting for it. A write already handed to the storage layer finishes atomically regardless of the cutoff, so a \`504\` answers 'unknown', never 'half done'.`,
+      },
+    });
+  }
+  /**
+   * Read a test-case revision in a suite
+   * The immutable snapshot recorded at `version` for the copy the named in a suite holds. A version the case never recorded answers `404`, and so does the current live version, which is read through the parent-scoped document routes.
+   * @returns TestCase The stored snapshot
+   * @throws ApiError
+   */
+  public readTestSuiteCaseRevision({
+    id,
+    caseId,
+    version,
+  }: {
+    id: string,
+    caseId: string,
+    /**
+     * A value that is not a positive integer is reported as `invalid_request`.
+     */
+    version: number,
+  }): CancelablePromise<TestCase> {
+    return this.httpRequest.request({
+      method: 'GET',
+      url: '/test_suites/{id}/test_cases/{case_id}/history/{version}',
+      path: {
+        'id': id,
+        'case_id': caseId,
+        'version': version,
+      },
+      errors: {
+        400: `\`invalid_request\`: the revision number is not a positive integer.`,
+        401: `\`missing_token\`, \`invalid_token\` or \`token_expired\`: the \`Authorization\` header was absent or carried a token this deployment does not accept. The response carries the \`WWW-Authenticate\` challenge.`,
+        403: `\`forbidden\`: the caller is authenticated but does not hold the role this operation needs on every project it reaches through. A caller that can reach nothing the operation touches is answered the same way, so the two are not distinguished. The projects a request reaches are resolved and checked before the resource itself is loaded, so this answer can precede the \`404\` a missing resource would draw; a deployment that does not enforce authentication skips the check and answers the ordinary \`404\` instead.`,
+        404: `Structured error envelope: \`{"error": {"code": ..., "message": ...}}\``,
+        503: `\`service_unavailable\`: the request arrived while \`TATU_MAX_CONCURRENCY\` (default 128; an explicit \`0\` removes the cap) others were already in flight. The server refuses rather than queues, and the answer carries \`Retry-After\`.`,
+        504: `\`request_timeout\`: the request outlived \`TATU_REQUEST_TIMEOUT_MS\` (default 300000 ms; an explicit \`0\` disables the deadline) and the server stopped waiting for it. A write already handed to the storage layer finishes atomically regardless of the cutoff, so a \`504\` answers 'unknown', never 'half done'.`,
       },
     });
   }
@@ -272,9 +386,9 @@ export class TestSuitesService {
         403: `\`forbidden\`: the caller is authenticated but does not hold the role this operation needs on every project it reaches through. A caller that can reach nothing the operation touches is answered the same way, so the two are not distinguished. The projects a request reaches are resolved and checked before the resource itself is loaded, so this answer can precede the \`404\` a missing resource would draw; a deployment that does not enforce authentication skips the check and answers the ordinary \`404\` instead.`,
         404: `Structured error envelope: \`{"error": {"code": ..., "message": ...}}\``,
         409: `Structured error envelope: \`{"error": {"code": ..., "message": ...}}\``,
-        413: `Every request is capped at \`TUCANO_MAX_BODY_BYTES\` (default 50 MiB) by the router, before the handler runs: the answer is plain text — \`length limit exceeded\` — never the error envelope. Because the router cap and the attachment cap are the same size, the \`payload_too_large\` envelope the API can still produce is unreachable for attachments, and this plain-text 413 is the only observable one.`,
-        503: `\`service_unavailable\`: the request arrived while \`TUCANO_MAX_CONCURRENCY\` (default 128; an explicit \`0\` removes the cap) others were already in flight. The server refuses rather than queues, and the answer carries \`Retry-After\`.`,
-        504: `\`request_timeout\`: the request outlived \`TUCANO_REQUEST_TIMEOUT_MS\` (default 300000 ms; an explicit \`0\` disables the deadline) and the server stopped waiting for it. A write already handed to the storage layer finishes atomically regardless of the cutoff, so a \`504\` answers 'unknown', never 'half done'.`,
+        413: `Every request is capped at \`TATU_MAX_BODY_BYTES\` (default 50 MiB) by the router, before the handler runs: the answer is plain text — \`length limit exceeded\` — never the error envelope. Because the router cap and the attachment cap are the same size, the \`payload_too_large\` envelope the API can still produce is unreachable for attachments, and this plain-text 413 is the only observable one.`,
+        503: `\`service_unavailable\`: the request arrived while \`TATU_MAX_CONCURRENCY\` (default 128; an explicit \`0\` removes the cap) others were already in flight. The server refuses rather than queues, and the answer carries \`Retry-After\`.`,
+        504: `\`request_timeout\`: the request outlived \`TATU_REQUEST_TIMEOUT_MS\` (default 300000 ms; an explicit \`0\` disables the deadline) and the server stopped waiting for it. A write already handed to the storage layer finishes atomically regardless of the cutoff, so a \`504\` answers 'unknown', never 'half done'.`,
       },
     });
   }
@@ -310,8 +424,8 @@ export class TestSuitesService {
         403: `\`forbidden\`: the caller is authenticated but does not hold the role this operation needs on every project it reaches through. A caller that can reach nothing the operation touches is answered the same way, so the two are not distinguished. The projects a request reaches are resolved and checked before the resource itself is loaded, so this answer can precede the \`404\` a missing resource would draw; a deployment that does not enforce authentication skips the check and answers the ordinary \`404\` instead.`,
         404: `Structured error envelope: \`{"error": {"code": ..., "message": ...}}\``,
         409: `Structured error envelope: \`{"error": {"code": ..., "message": ...}}\``,
-        503: `\`service_unavailable\`: the request arrived while \`TUCANO_MAX_CONCURRENCY\` (default 128; an explicit \`0\` removes the cap) others were already in flight. The server refuses rather than queues, and the answer carries \`Retry-After\`.`,
-        504: `\`request_timeout\`: the request outlived \`TUCANO_REQUEST_TIMEOUT_MS\` (default 300000 ms; an explicit \`0\` disables the deadline) and the server stopped waiting for it. A write already handed to the storage layer finishes atomically regardless of the cutoff, so a \`504\` answers 'unknown', never 'half done'.`,
+        503: `\`service_unavailable\`: the request arrived while \`TATU_MAX_CONCURRENCY\` (default 128; an explicit \`0\` removes the cap) others were already in flight. The server refuses rather than queues, and the answer carries \`Retry-After\`.`,
+        504: `\`request_timeout\`: the request outlived \`TATU_REQUEST_TIMEOUT_MS\` (default 300000 ms; an explicit \`0\` disables the deadline) and the server stopped waiting for it. A write already handed to the storage layer finishes atomically regardless of the cutoff, so a \`504\` answers 'unknown', never 'half done'.`,
       },
     });
   }
@@ -347,8 +461,8 @@ export class TestSuitesService {
         403: `\`forbidden\`: the caller is authenticated but does not hold the role this operation needs on every project it reaches through. A caller that can reach nothing the operation touches is answered the same way, so the two are not distinguished. The projects a request reaches are resolved and checked before the resource itself is loaded, so this answer can precede the \`404\` a missing resource would draw; a deployment that does not enforce authentication skips the check and answers the ordinary \`404\` instead.`,
         404: `Structured error envelope: \`{"error": {"code": ..., "message": ...}}\``,
         409: `Structured error envelope: \`{"error": {"code": ..., "message": ...}}\``,
-        503: `\`service_unavailable\`: the request arrived while \`TUCANO_MAX_CONCURRENCY\` (default 128; an explicit \`0\` removes the cap) others were already in flight. The server refuses rather than queues, and the answer carries \`Retry-After\`.`,
-        504: `\`request_timeout\`: the request outlived \`TUCANO_REQUEST_TIMEOUT_MS\` (default 300000 ms; an explicit \`0\` disables the deadline) and the server stopped waiting for it. A write already handed to the storage layer finishes atomically regardless of the cutoff, so a \`504\` answers 'unknown', never 'half done'.`,
+        503: `\`service_unavailable\`: the request arrived while \`TATU_MAX_CONCURRENCY\` (default 128; an explicit \`0\` removes the cap) others were already in flight. The server refuses rather than queues, and the answer carries \`Retry-After\`.`,
+        504: `\`request_timeout\`: the request outlived \`TATU_REQUEST_TIMEOUT_MS\` (default 300000 ms; an explicit \`0\` disables the deadline) and the server stopped waiting for it. A write already handed to the storage layer finishes atomically regardless of the cutoff, so a \`504\` answers 'unknown', never 'half done'.`,
       },
     });
   }
@@ -384,8 +498,8 @@ export class TestSuitesService {
         403: `\`forbidden\`: the caller is authenticated but does not hold the role this operation needs on every project it reaches through. A caller that can reach nothing the operation touches is answered the same way, so the two are not distinguished. The projects a request reaches are resolved and checked before the resource itself is loaded, so this answer can precede the \`404\` a missing resource would draw; a deployment that does not enforce authentication skips the check and answers the ordinary \`404\` instead.`,
         404: `Structured error envelope: \`{"error": {"code": ..., "message": ...}}\``,
         409: `Structured error envelope: \`{"error": {"code": ..., "message": ...}}\``,
-        503: `\`service_unavailable\`: the request arrived while \`TUCANO_MAX_CONCURRENCY\` (default 128; an explicit \`0\` removes the cap) others were already in flight. The server refuses rather than queues, and the answer carries \`Retry-After\`.`,
-        504: `\`request_timeout\`: the request outlived \`TUCANO_REQUEST_TIMEOUT_MS\` (default 300000 ms; an explicit \`0\` disables the deadline) and the server stopped waiting for it. A write already handed to the storage layer finishes atomically regardless of the cutoff, so a \`504\` answers 'unknown', never 'half done'.`,
+        503: `\`service_unavailable\`: the request arrived while \`TATU_MAX_CONCURRENCY\` (default 128; an explicit \`0\` removes the cap) others were already in flight. The server refuses rather than queues, and the answer carries \`Retry-After\`.`,
+        504: `\`request_timeout\`: the request outlived \`TATU_REQUEST_TIMEOUT_MS\` (default 300000 ms; an explicit \`0\` disables the deadline) and the server stopped waiting for it. A write already handed to the storage layer finishes atomically regardless of the cutoff, so a \`504\` answers 'unknown', never 'half done'.`,
       },
     });
   }
@@ -425,9 +539,9 @@ export class TestSuitesService {
         403: `\`forbidden\`: the caller is authenticated but does not hold the role this operation needs on every project it reaches through. A caller that can reach nothing the operation touches is answered the same way, so the two are not distinguished. The projects a request reaches are resolved and checked before the resource itself is loaded, so this answer can precede the \`404\` a missing resource would draw; a deployment that does not enforce authentication skips the check and answers the ordinary \`404\` instead.`,
         404: `Structured error envelope: \`{"error": {"code": ..., "message": ...}}\``,
         409: `Structured error envelope: \`{"error": {"code": ..., "message": ...}}\``,
-        413: `Every request is capped at \`TUCANO_MAX_BODY_BYTES\` (default 50 MiB) by the router, before the handler runs: the answer is plain text — \`length limit exceeded\` — never the error envelope. Because the router cap and the attachment cap are the same size, the \`payload_too_large\` envelope the API can still produce is unreachable for attachments, and this plain-text 413 is the only observable one.`,
-        503: `\`service_unavailable\`: the request arrived while \`TUCANO_MAX_CONCURRENCY\` (default 128; an explicit \`0\` removes the cap) others were already in flight. The server refuses rather than queues, and the answer carries \`Retry-After\`.`,
-        504: `\`request_timeout\`: the request outlived \`TUCANO_REQUEST_TIMEOUT_MS\` (default 300000 ms; an explicit \`0\` disables the deadline) and the server stopped waiting for it. A write already handed to the storage layer finishes atomically regardless of the cutoff, so a \`504\` answers 'unknown', never 'half done'.`,
+        413: `Every request is capped at \`TATU_MAX_BODY_BYTES\` (default 50 MiB) by the router, before the handler runs: the answer is plain text — \`length limit exceeded\` — never the error envelope. Because the router cap and the attachment cap are the same size, the \`payload_too_large\` envelope the API can still produce is unreachable for attachments, and this plain-text 413 is the only observable one.`,
+        503: `\`service_unavailable\`: the request arrived while \`TATU_MAX_CONCURRENCY\` (default 128; an explicit \`0\` removes the cap) others were already in flight. The server refuses rather than queues, and the answer carries \`Retry-After\`.`,
+        504: `\`request_timeout\`: the request outlived \`TATU_REQUEST_TIMEOUT_MS\` (default 300000 ms; an explicit \`0\` disables the deadline) and the server stopped waiting for it. A write already handed to the storage layer finishes atomically regardless of the cutoff, so a \`504\` answers 'unknown', never 'half done'.`,
       },
     });
   }
@@ -469,8 +583,8 @@ export class TestSuitesService {
         403: `\`forbidden\`: the caller is authenticated but does not hold the role this operation needs on every project it reaches through. A caller that can reach nothing the operation touches is answered the same way, so the two are not distinguished. The projects a request reaches are resolved and checked before the resource itself is loaded, so this answer can precede the \`404\` a missing resource would draw; a deployment that does not enforce authentication skips the check and answers the ordinary \`404\` instead.`,
         404: `Structured error envelope: \`{"error": {"code": ..., "message": ...}}\``,
         409: `Structured error envelope: \`{"error": {"code": ..., "message": ...}}\``,
-        503: `\`service_unavailable\`: the request arrived while \`TUCANO_MAX_CONCURRENCY\` (default 128; an explicit \`0\` removes the cap) others were already in flight. The server refuses rather than queues, and the answer carries \`Retry-After\`.`,
-        504: `\`request_timeout\`: the request outlived \`TUCANO_REQUEST_TIMEOUT_MS\` (default 300000 ms; an explicit \`0\` disables the deadline) and the server stopped waiting for it. A write already handed to the storage layer finishes atomically regardless of the cutoff, so a \`504\` answers 'unknown', never 'half done'.`,
+        503: `\`service_unavailable\`: the request arrived while \`TATU_MAX_CONCURRENCY\` (default 128; an explicit \`0\` removes the cap) others were already in flight. The server refuses rather than queues, and the answer carries \`Retry-After\`.`,
+        504: `\`request_timeout\`: the request outlived \`TATU_REQUEST_TIMEOUT_MS\` (default 300000 ms; an explicit \`0\` disables the deadline) and the server stopped waiting for it. A write already handed to the storage layer finishes atomically regardless of the cutoff, so a \`504\` answers 'unknown', never 'half done'.`,
       },
     });
   }

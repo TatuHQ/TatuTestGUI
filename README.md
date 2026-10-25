@@ -1,6 +1,13 @@
-# Tucano Test GUI
+# TatuTest GUI
 
-Accessible web interface for [TucanoTestAPI](https://github.com/TucanoTechnology/TucanoTestAPI).
+Accessible web interface for [TatuTestAPI](https://github.com/TatuHQ/TatuTestAPI).
+
+## Deployment identifiers (0.2.0)
+
+0.2.0 is a clean-break deployment release: the nginx proxy variable is `TATU_API_URL`, the package
+is `tatu-test-gui`, the generated client is `TatuApi`, and the image is
+`ghcr.io/tatuhq/tatutestgui` (or `tatu-test-gui:local` from Compose). Update the proxy variable and
+rebuild the container; no stored data is involved.
 
 ## Architecture
 
@@ -11,7 +18,7 @@ Browser ──► GUI container (nginx, static assets)
                │
                │ HTTP/JSON
                ▼
-          TucanoTestAPI
+          TatuTestAPI
                │
                ▼
         JSON files on a persistent volume
@@ -26,7 +33,7 @@ The shell lays out as a top bar (brand, project switcher, global search, account
 | Module | Centre pane | Detail |
 | --- | --- | --- |
 | Test cases | `src/features/cases/CaseList.tsx` — table scoped by the tree node, with search, bulk tag/status operations, JSON export and case creation; the Last Results column reads `GET /reports/last-results` | `CaseDetail.tsx` — inline-editable header plus Details / Steps / Attachments / History tabs; Details shows the case's read-only defect list |
-| Test runs | `src/features/runs/RunList.tsx` — status-summary badges with configuration and tag filters | `RunDetail.tsx` — Cases tab with inline status recording (the record echoes the stored result, painted in place) and the result dialog — where the case's own defect links are fetched from the defects route (TucanoTestAPI#460) — and an Import tab for JUnit/JSON |
+| Test runs | `src/features/runs/RunList.tsx` — status-summary badges with configuration and tag filters | `RunDetail.tsx` — Cases tab with inline status recording (the record echoes the stored result, painted in place) and the result dialog — where the case's own defect links are fetched from the defects route (TatuTestAPI#460) — and an Import tab for JUnit/JSON |
 | Milestones | `src/features/milestones/MilestoneList.tsx` — five-segment progress bars | `MilestoneDetail.tsx` — edit, duplicate, delete, linked suites/runs |
 | Configurations | `src/features/configurations/ConfigurationList.tsx` | `ConfigurationDetail.tsx` |
 | Reports | `src/features/reports/ReportsView.tsx` — coverage and summary panels with scope filters | — |
@@ -88,15 +95,15 @@ npm run typecheck  # TypeScript only
 npm run build      # production bundle
 ```
 
-Point the application at an API with `VITE_API_BASE_URL`, read once at build time by `src/api/configure.ts`. When unset it calls `/api`, which nginx proxies to `TUCANO_API_URL` in the container.
+Point the application at an API with `VITE_API_BASE_URL`, read once at build time by `src/api/configure.ts`. When unset it calls `/api`, which nginx proxies to `TATU_API_URL` in the container.
 
 ## API client
 
-Calls to the API go through a client generated from a pinned copy of the TucanoTestAPI OpenAPI document, so the GUI cannot drift from the contract silently. Build it with `createApiClient()` in `src/api/configure.ts`; nothing else should construct HTTP calls.
+Calls to the API go through a client generated from a pinned copy of the TatuTestAPI OpenAPI document, so the GUI cannot drift from the contract silently. Build it with `createApiClient()` in `src/api/configure.ts`; nothing else should construct HTTP calls.
 
 ```sh
 npm run generate:client                # regenerate src/api/generated from api/openapi.json
-npm run sync:openapi -- --ref <sha>    # move the pin to another TucanoTestAPI revision
+npm run sync:openapi -- --ref <sha>    # move the pin to another TatuTestAPI revision
 ```
 
 `src/api/generated/` is committed and never edited by hand — the `client-drift` CI job regenerates it and fails when the committed output is stale. `src/api/client.ts` holds the session around the generated client: the stored token pair, the `apiFetch` wrapper that retries once after a refresh, and the session-expired notification. It does not build requests of its own.
@@ -109,13 +116,13 @@ The login screen exchanges credentials for a bearer token pair via `POST /auth/l
 
 Data requests go through `apiFetch` in `src/api/client.ts`, and the client it hands the caller reads the stored access token once per request — a token stored after the client was built, by a sign-in or by a refresh, is the one the next request carries. A 401 response triggers one refresh-and-retry; concurrent 401s share that one exchange instead of burning the refresh token twice. When the refresh is refused the stored pair is discarded and the app returns to the login screen. Signing out revokes the refresh token with `POST /auth/logout`.
 
-Set `VITE_DEBUG_LOGIN=true` at build time to pre-fill the form and to list the demo accounts below it. The list covers the accounts a seeded TucanoTestAPI deployment can sign in as: `admin`, the bootstrap system administrator, and `viewer`, the account the seed grants ownership of `checkout.json` and no grant on `payments.json`. Their default passwords are `demo-admin-password` and `viewer-seed-password`; pass `VITE_DEMO_ADMIN_PASSWORD` and `VITE_DEMO_VIEWER_PASSWORD` when a deployment seeds its own. The seed creates no `owner` or `editor` account, and the API exposes no way to create one, so the GUI cannot offer those logins.
+Set `VITE_DEBUG_LOGIN=true` at build time to pre-fill the form and to list the demo accounts below it. The list covers the accounts a seeded TatuTestAPI deployment can sign in as: `admin`, the bootstrap system administrator, and `viewer`, the account the seed grants ownership of `checkout.json` and no grant on `payments.json`. Their default passwords are `demo-admin-password` and `viewer-seed-password`; pass `VITE_DEMO_ADMIN_PASSWORD` and `VITE_DEMO_VIEWER_PASSWORD` when a deployment seeds its own. The seed creates no `owner` or `editor` account, and the API exposes no way to create one, so the GUI cannot offer those logins.
 
 ## Container
 
 ```sh
-docker build --tag tucano-test-gui .
-docker run --rm -p 8080:8080 -e TUCANO_API_URL=http://api:3000 tucano-test-gui
+docker build --tag tatu-test-gui .
+docker run --rm -p 8080:8080 -e TATU_API_URL=http://api:3000 tatu-test-gui
 ```
 
 The image serves on port `8080` as an unprivileged user. `/healthz` is available for load balancer probes.

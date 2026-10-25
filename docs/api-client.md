@@ -7,7 +7,7 @@ silently from the contract before (see issue #54); a generated one cannot.
 ## The boundary
 
 ```text
-api/openapi.json            pinned copy of TucanoTestAPI's contract
+api/openapi.json            pinned copy of TatuTestAPI's contract
 api/contract.lock.json      provenance: repo, revision, sha256, operation count, generator version
 src/api/generated/**        generator output — never edited by hand
 src/api/configure.ts        base URL, token and header wiring for the generated client
@@ -21,13 +21,13 @@ generated tree.
 ## Commands
 
 ```sh
-npm run sync:openapi              # re-read the pinned revision from TucanoTestAPI
+npm run sync:openapi              # re-read the pinned revision from TatuTestAPI
 npm run sync:openapi -- --ref <sha>   # move the pin to another revision
 npm run generate:client           # regenerate src/api/generated from api/openapi.json
 ```
 
 `sync:openapi` requires an authenticated `gh` CLI with read access to
-`TucanoTechnology/TucanoTestAPI`. It rewrites both `api/openapi.json` and
+`TatuHQ/TatuTestAPI`. It rewrites both `api/openapi.json` and
 `api/contract.lock.json`.
 
 The usual change is:
@@ -37,7 +37,7 @@ npm run sync:openapi -- --ref <sha-of-the-API-change>
 npm run generate:client
 npm test
 git add api src/api/generated
-git commit -m "chore(api): follow TucanoTestAPI <sha>"
+git commit -m "chore(api): follow TatuTestAPI <sha>"
 ```
 
 ## Why the contract is pinned rather than fetched at build time
@@ -55,19 +55,19 @@ change always shows up as a reviewable diff of `api/` plus `src/api/generated/`.
 ## Base URL
 
 The browser always calls `/api`; nginx strips that prefix before forwarding to
-`TUCANO_API_URL`, and the API serves unprefixed routes. `resolveApiBaseUrl`
+`TATU_API_URL`, and the API serves unprefixed routes. `resolveApiBaseUrl`
 defaults to `/api`, and `VITE_API_BASE_URL` overrides it for local development
 or embedding. Trailing slashes are stripped so paths are never joined as `//`.
 
 ## Configurations are reached through their project
 
 Issue #54 lists `listConfigurations` and `createConfiguration`. Neither exists
-in the contract: TucanoTestAPI removed the global collection routes from
+in the contract: TatuTestAPI removed the global collection routes from
 `openapi.json` together with the global creates, leaving only `GET`, `PUT` and
 `DELETE /configurations/{id}`. The routes are still served — reads are global by
 design — but they sit in `api::UNDOCUMENTED_ROUTES` in that repository's
 `src/api/mod.rs`, so the contract does not publish them and the generator cannot
-emit them. This was a deliberate API decision (TucanoTestAPI#222), not a stale
+emit them. This was a deliberate API decision (TatuTestAPI#222), not a stale
 pin and not a GUI gap.
 
 Creating and listing moved to the project that owns the configuration:
@@ -80,7 +80,7 @@ Creating and listing moved to the project that owns the configuration:
 `src/api/contract.test.ts` records the pairing in `RETIRED_GLOBAL_COLLECTIONS`
 and asserts both halves: the retired operations must stay absent from the
 document, their replacements must stay present, and the replacements must sit
-under `/projects/{id}/`. If TucanoTestAPI re-publishes a global collection route,
+under `/projects/{id}/`. If TatuTestAPI re-publishes a global collection route,
 those tests fail and the table has to be revisited.
 
 The same retirement applies to `/test_suites`, `/test_cases`, `/test_runs` and
@@ -103,6 +103,6 @@ release from a milestone name or an environment from a configuration name would 
 the GUI guessing at context the API has not published, which the API-first rule in
 `AGENTS.md` forbids.
 
-The API half is tracked as TucanoTestAPI#262. When it lands, move the pin with
+The API half is tracked as TatuTestAPI#262. When it lands, move the pin with
 `npm run sync:openapi -- --ref <sha>`, regenerate, and pass the values to
 `AppShell` the way `projects` and `currentProject` already are.

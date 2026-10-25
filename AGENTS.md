@@ -1,6 +1,6 @@
-# AI Agent Rules — Tucano Test GUI
+# AI Agent Rules — TatuTest GUI
 
-Rules and guidelines for AI agents working on the Tucano Test GUI.
+Rules and guidelines for AI agents working on the TatuTest GUI.
 
 ## Shared rules
 
@@ -9,9 +9,9 @@ Read them before making changes for branching, git usage, dependencies, code rev
 ticket management and test policy. This file records only what is specific to this repository.
 
 **`AgentRules/` is synced automatically from
-[TucanoAgentRules](https://github.com/TucanoTechnology/TucanoAgentRules), the single source of
-truth shared with [TucanoTestAPI](https://github.com/TucanoTechnology/TucanoTestAPI). Do not edit
-files under `AgentRules/` in this repository — submit changes against TucanoAgentRules instead and
+[TatuAgentRules](https://github.com/TatuHQ/TatuAgentRules), the single source of
+truth shared with [TatuTestAPI](https://github.com/TatuHQ/TatuTestAPI). Do not edit
+files under `AgentRules/` in this repository — submit changes against TatuAgentRules instead and
 they will arrive here as an automated pull request.**
 
 ---
@@ -20,7 +20,7 @@ they will arrive here as an automated pull request.**
 
 **The GUI is a presentation layer and nothing more.**
 
-- All data and operations flow through the TucanoTestAPI HTTP API.
+- All data and operations flow through the TatuTestAPI HTTP API.
 - The GUI never reads the storage volume and never connects to a database.
 - No server-side state: the container serves static assets only, so replicas scale independently
   of the API tier.
@@ -58,7 +58,8 @@ they will arrive here as an automated pull request.**
 
 ### API access
 
-- All requests go through `TucanoApiClient`; do not call `fetch` directly from components.
+- All requests go through `createApiClient()` (the generated `TatuApi` wrapper); do not call
+  `fetch` directly from components.
 - Surface the API error envelope (`error.code`, `error.message`) rather than raw responses.
 - Never render internal paths, stack traces or storage details.
 
@@ -84,7 +85,7 @@ Accessibility assertions are part of the test suite, not a separate optional ste
 
 - Static assets served by unprivileged nginx on port `8080`.
 - `/healthz` is the load balancer probe.
-- `/api/` is proxied to `TUCANO_API_URL`; the browser never needs the API host directly.
+- `/api/` is proxied to `TATU_API_URL`; the browser never needs the API host directly.
 - The image carries no secrets and no writable application state.
 
 ---

@@ -4,7 +4,7 @@ import type { MilestoneProgress } from "../api/generated/index.js";
  * The five result buckets as a single stacked bar. A mini bar carries only
  * the proportions; the detail view pairs it with the counts. A bucket is a
  * share of `totalCases`, and an inconsistent payload (the API's own counting
- * is tracked in TucanoTestAPI#286) is clipped rather than overflowing.
+ * is tracked in TatuTestAPI#286) is clipped rather than overflowing.
  */
 export function ProgressBar({
   progress,

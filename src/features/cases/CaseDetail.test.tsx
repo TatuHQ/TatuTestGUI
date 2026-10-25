@@ -1013,7 +1013,10 @@ describe("CaseDetail", () => {
     // text/plain even though the operation promises a Blob. A decoded string
     // would be rejected by createObjectURL and the download would never start.
     const [blob] = createObjectURL.mock.calls[0] ?? [];
-    if (!(blob instanceof Blob)) {
+    // jsdom and the fetch implementation can hold different Blob realms, so a
+    // realm-local `instanceof` is not a portable check. What matters is that
+    // the download handed over a body carrying the bytes, not a decoded string.
+    if (!blob || typeof blob.text !== "function") {
       throw new Error("the download handed createObjectURL something else");
     }
     expect(await blob.text()).toBe("%PDF");

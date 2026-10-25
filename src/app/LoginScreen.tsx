@@ -24,14 +24,14 @@ export function debugLoginEnabled(env: DebugLoginEnv): boolean {
 }
 
 /**
- * The accounts a seeded TucanoTestAPI deployment can sign in as, with the
+ * The accounts a seeded TatuTestAPI deployment can sign in as, with the
  * defaults its own seed path documents: `admin` is the bootstrap account
  * (`scripts/demo.sh`, `DEMO_ADMIN_PASSWORD`) and `viewer` is the one account the
- * seed creates and grants (`scripts/seed.mjs`, `TUCANO_SEED_VIEWER_PASSWORD`).
+ * seed creates and grants (`scripts/seed.mjs`, `TATU_SEED_VIEWER_PASSWORD`).
  * A deployment that seeds its own passwords supplies them at build time.
  *
  * The seed grants no other account, so there is no separate `owner` or `editor`
- * login to pre-fill until TucanoTestAPI seeds one.
+ * login to pre-fill until TatuTestAPI seeds one.
  */
 export function readDemoAccounts(env: DebugLoginEnv): DemoAccount[] {
   return [
@@ -89,7 +89,7 @@ export function LoginScreen() {
   return (
     <div className="login-screen">
       <form className="login-form" onSubmit={handleSubmit} aria-label="Sign in">
-        <h1 className="login-form__title">Tucano Test</h1>
+        <h1 className="login-form__title">TatuTest</h1>
 
         {error && (
           <div className="error-display" role="alert">

@@ -47,7 +47,7 @@ execFileSync(
     '--client',
     'fetch',
     '--name',
-    'TucanoApi',
+    'TatuApi',
     '--request',
     REQUEST_TEMPLATE,
     '--useOptions',
