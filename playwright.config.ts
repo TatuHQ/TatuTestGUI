@@ -17,6 +17,10 @@ export default defineConfig({
   fullyParallel: true,
   forbidOnly: Boolean(process.env.CI),
   retries: process.env.CI ? 1 : 0,
+  // The shared runner host is busy; a 5s visibility window is too tight for
+  // the login/bootstrap round trip when several jobs run at once.
+  timeout: process.env.CI ? 60_000 : 30_000,
+  expect: { timeout: process.env.CI ? 15_000 : 5_000 },
   reporter: process.env.CI
     ? [["github"], ["html", { open: "never" }]]
     : [["list"]],
