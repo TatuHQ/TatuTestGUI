@@ -67,7 +67,13 @@ jobs:
           # between concurrent E2E jobs. Give every run its own pair.
           export E2E_PORT=$((20000 + GITHUB_RUN_ID % 20000))
           export E2E_API_PORT=$((E2E_PORT + 1))
+          # `docker run` starts from an empty environment, so `CI` — which
+          # playwright.config.ts reads for its retries, its 15s expectation
+          # window and `reuseExistingServer` — never reached the container and
+          # the suite silently ran with the local 5s window and no retry. Pass
+          # it, and GITHUB_ACTIONS so the `github` reporter annotates the run.
           docker run --rm --network host \
+            -e CI -e GITHUB_ACTIONS \
             -e E2E_PORT -e E2E_API_PORT \
             -v "$GITHUB_WORKSPACE:/w" -w /w \
             mcr.microsoft.com/playwright:v1.63.0-noble \
